@@ -1,0 +1,27 @@
+fastapi
+uvicorn
+sqlalchemy
+httpx
+bcrypt
+apscheduler
+python-dotenv
+psycopg2-binary
+pydantic[email]
+
+
+
+
+
+
+
+
+# fastapi
+# uvicorn
+# motor
+# pydantic
+# httpx
+# python-dotenv
+# python-jose==3.3.0
+# python-multipart 
+# bcrypt
+# pydantic[email]

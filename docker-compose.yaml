@@ -1,0 +1,118 @@
+version: "3.9"
+
+services:
+  keycloak:
+    image: quay.io/keycloak/keycloak:24.0.2
+    container_name: keycloak
+    command: start-dev
+    ports:
+      - "8080:8080"
+    environment:
+      KEYCLOAK_ADMIN: ${KEYCLOAK_ADMIN}
+      KEYCLOAK_ADMIN_PASSWORD: ${KEYCLOAK_ADMIN_PASSWORD}
+    volumes:
+      - keycloak_data:/opt/keycloak/data
+
+  # postgres:
+  #   image: postgres:15
+  #   container_name: postgres
+  #   restart: always
+  #   ports:
+  #     - "5432:5432"
+  #   environment:
+  #     POSTGRES_USER: postgres
+  #     POSTGRES_PASSWORD: postgres
+  #     POSTGRES_DB: user_db
+  #   volumes:
+  #     - postgres_data:/var/lib/postgresql/data
+
+volumes:
+  keycloak_data:
+  # postgres_data:
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# version: "3.9"
+
+# services:
+#   keycloak:
+#     image: quay.io/keycloak/keycloak:24.0.2
+#     container_name: keycloak
+#     command: start-dev
+#     ports:
+#       - "8080:8080"
+#     environment:
+#       KEYCLOAK_ADMIN: admin
+#       KEYCLOAK_ADMIN_PASSWORD: admin
+#     volumes:
+#       - keycloak_data:/opt/keycloak/data
+
+#   mongodb:
+#     image: mongo:6.0
+#     container_name: mongodb
+#     ports:
+#       - "27017:27017"
+#     volumes:
+#       - mongodb_data:/data/db
+
+#   user_service:
+#     build:
+#       context: .
+#     container_name: user_info_service
+#     ports:
+#       - "8000:8000"
+#     depends_on:
+#       - mongo
+#       - keycloak
+#     environment:
+#       MONGO_URL: mongodb://mongo:27017/
+#       KEYCLOAK_URL: http://keycloak:8080
+#       KEYCLOAK_REALM: user-info-realm
+#     env_file:
+#       - .env
+
+# volumes:
+#   keycloak_data:
+#   mongodb_data:
+
+
+
+
+
+
+
+
+# version: "3.8"
+
+# services:
+#   keycloak:
+#     image: quay.io/keycloak/keycloak:24.0.3
+#     command: start-dev
+#     environment:
+#       KEYCLOAK_ADMIN: admin
+#       KEYCLOAK_ADMIN_PASSWORD: admin
+#     ports:
+#       - "8080:8080"
+#     networks:
+#       - backend
+
+#   mongo:
+#     image: mongo:6.0
+#     ports:
+#       - "27017:27017"
+#     networks:
+#       - backend
+
+# networks:
+#   backend:
