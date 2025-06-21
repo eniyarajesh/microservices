@@ -160,32 +160,32 @@ A background task runs every **15 seconds** to automatically:
 
 ---
 
-🧪 Testing
+### 🧪 Testing
 
-    Swagger UI:
-    ```bash
+#### Swagger UI:
+```bash
     http://localhost:8000/docs
-    ```
+```
 
 ---
 
-📋 Logging  
+### 📋 Logging  
 
-    All logs are saved to:
-    ```bash
+#### All logs are saved to:
+```bash
     logs/user_log.log
-    ```
+```
 
 ---
 
-📦 Tech Stack
+### 📦 Tech Stack
 
-    FastAPI – API framework
-    PostgreSQL – Relational DB with SQLAlchemy ORM
-    Keycloak – Identity & access management
-    Redis – (Optional) Caching passwords
-    APScheduler – Background jobs
-    httpx – Async HTTP client
+- FastAPI – API framework
+- PostgreSQL – Relational DB with SQLAlchemy ORM
+- Keycloak – Identity & access management
+- Redis – (Optional) Caching passwords
+- APScheduler – Background jobs
+- httpx – Async HTTP client
 
 ---
 
