@@ -17,35 +17,41 @@ A backend microservice built using **FastAPI**, **PostgreSQL**, and **Keycloak**
 
 ## 📁 Project Structure
 
+## 📁 Project Structure
 
+<pre><code>
 user_service/
 ├── main.py
-├── models/user_model.py
-├── db/postgres.py
+├── models/
+│   └── user_model.py
+├── db/
+│   └── postgres.py
 ├── services/
-│ ├── user_service.py   
-│ ├── auth_service.py
-│ └── postgres_service.py
+│   ├── user_service.py   
+│   ├── auth_service.py
+│   └── postgres_service.py
 ├── auth/
-│ └── keycloak_auth.py
+│   └── keycloak_auth.py
 ├── tasks/
-│ └── sync_to_keycloak.py
+│   └── sync_to_keycloak.py
 ├── routers/
-│ ├── user_router.py
-│ └── auth_router.py
+│   ├── user_router.py
+│   └── auth_router.py
 ├── config/
-│ └── settings.py
+│   └── settings.py
 ├── utils/
-│ └── email_pswd_pattern.py
+│   └── email_pswd_pattern.py
 ├── logs/
-│ └── logging_config.py   
+│   └── logging_config.py   
 ├── redis_cache/
-│ └── user_cache.py   
-├──  docker-compose.yaml   
+│   └── user_cache.py   
+├── docker-compose.yaml   
 ├── Dockerfile    
 ├── .env
 ├── requirements.txt   
-└──  README.md  
+└── README.md
+</code></pre>
+
 
 ---
 
@@ -99,7 +105,7 @@ Before running this project, make sure you have the following installed and conf
 ```bash
 git clone https://github.com/your-username/user_service.git
 cd user_service
-
+```
 
 2. Create a .env file in the root with the following contents:
 
@@ -108,14 +114,17 @@ cd user_service
 4. Install dependencies:
 ```bash
 pip install -r requirements.txt
+```
 
 5. Run the app:
 ```bash
 uvicorn main:app --reload
+```
 
 6. (Optional) Use Docker:
 ```bash
 docker-compose up --build
+```
 
 ---
 
@@ -156,6 +165,7 @@ A background task runs every **15 seconds** to automatically:
     Swagger UI:
     ```bash
     http://localhost:8000/docs
+    ```
 
 ---
 
@@ -164,6 +174,7 @@ A background task runs every **15 seconds** to automatically:
     All logs are saved to:
     ```bash
     logs/user_log.log
+    ```
 
 ---
 
