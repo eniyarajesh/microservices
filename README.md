@@ -17,8 +17,6 @@ A backend microservice built using **FastAPI**, **PostgreSQL**, and **Keycloak**
 
 ## 📁 Project Structure
 
-## 📁 Project Structure
-
 <pre><code>
 user_service/
 ├── main.py
@@ -189,7 +187,7 @@ A background task runs every **15 seconds** to automatically:
 
 ---
 
-📄 License
+### 📄 License
 
     MIT License - free for personal and commercial use.
 
