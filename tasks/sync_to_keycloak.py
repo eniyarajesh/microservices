@@ -1,16 +1,11 @@
-import asyncio
-from db.postgres import SessionLocal
-from services.user_service import get_unsynced_users, mark_user_as_synced
 from auth.keycloak_auth import create_keycloak_user
-from models.user_model import UserCreate
-from logs.logging_config import setup_logger
-from temp_cache.user_cache import get_all_cached_users, pop_cached_user
+from redis_cache.user_cache import get_all_cached_users, pop_cached_user
+import logging
+
+logger = logging.getLogger(__name__)
 
 
-logger = setup_logger()
-
-
-
+# sync user to keycloak (background task)
 async def sync_users_to_keycloak():
     cached_users = get_all_cached_users()
 

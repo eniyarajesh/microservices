@@ -1,9 +1,8 @@
 from fastapi import HTTPException
 from sqlalchemy.orm import Session
 from models.user_model import User
-from utils.email_pswd_pattern import hash_password
 from models.user_model import UserCreate
-from temp_cache.user_cache import cache_user_data
+from redis_cache.user_cache import cache_user_data
 from services.postgres_service import store_user_in_postgres
 from typing import Dict
 from db.postgres import SessionLocal
@@ -27,6 +26,8 @@ def mark_user_as_synced(db: Session, username: str):
         db.commit()
 
 
+
+'''
 async def register_user_service(user: UserCreate):
     db = SessionLocal()
     try:
@@ -43,5 +44,4 @@ async def register_user_service(user: UserCreate):
     finally:
         db.close()
     return {"message": f"User {user.username} successfully registered and queued for Keycloak sync."}
-
-
+'''

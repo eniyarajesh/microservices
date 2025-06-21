@@ -3,21 +3,18 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
+# postgresql url
 DATABASE_URL = os.getenv("DATABASE_URL")
+
+# keycloak credentials
 KEYCLOAK_URL = os.getenv("KEYCLOAK_URL")
 KEYCLOAK_REALM = os.getenv("KEYCLOAK_REALM")
 KEYCLOAK_CLIENT_ID = os.getenv("KEYCLOAK_CLIENT_ID")
 KEYCLOAK_CLIENT_SECRET = os.getenv("KEYCLOAK_CLIENT_SECRET")
 
-# DATABASE_URL = os.getenv("DATABASE_URL", "postgresql://postgres:postgres@localhost:5432/user_db")
-# KEYCLOAK_URL = os.getenv("KEYCLOAK_URL", "http://localhost:8080")
-# KEYCLOAK_REALM = os.getenv("KEYCLOAK_REALM", "user-info-realm")
-# KEYCLOAK_CLIENT_ID = os.getenv("KEYCLOAK_CLIENT_ID", "user-info-client")
-# KEYCLOAK_CLIENT_SECRET = os.getenv("KEYCLOAK_CLIENT_SECRET", "")
-
-
-
-
+# redis
+REDIS_HOST = os.getenv("REDIS_HOST")
+REDIS_PORT = int(os.getenv("REDIS_PORT"))
 
 
 

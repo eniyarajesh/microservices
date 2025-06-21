@@ -1,11 +1,11 @@
 import httpx
-from fastapi import HTTPException, status
+from fastapi import HTTPException
 from config.settings import KEYCLOAK_URL, KEYCLOAK_REALM, KEYCLOAK_CLIENT_ID, KEYCLOAK_CLIENT_SECRET
-from logs.logging_config import setup_logger
+import logging
 
-logger = setup_logger()
+logger = logging.getLogger(__name__)
 
-
+# get token to validate
 async def get_access_token(username: str,password: str):
     token_url = f"{KEYCLOAK_URL}/realms/{KEYCLOAK_REALM}/protocol/openid-connect/token"
     data = {
@@ -20,24 +20,11 @@ async def get_access_token(username: str,password: str):
     async with httpx.AsyncClient() as client:
         response = await client.post(token_url, data=data)
     if response.status_code != 200:
+        logger.error(f"Invalid user credentials")
         raise HTTPException(status_code=401, detail=response.text)
+    logger.info(f"Token is generated successfully for the user {username}")
     return response.json()
 
 
-async def validate_token_with_keycloak(token: str) -> dict:
-    """
-    Calls Keycloak's userinfo endpoint to validate token.
-    """
-
-    url = f"{KEYCLOAK_URL}/realms/{KEYCLOAK_REALM}/protocol/openid-connect/userinfo"
-    headers = {"Authorization": f"Bearer {token}"}
-    async with httpx.AsyncClient() as client:
-        response = await client.get(url, headers=headers)
-    if response.status_code == 200:
-        return response.json()
-    raise HTTPException(
-        status_code=status.HTTP_401_UNAUTHORIZED,
-        detail=f"Keycloak response: {response.status_code} - {response.text}"
-    )
 
 

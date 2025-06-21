@@ -1,10 +1,6 @@
 from fastapi import APIRouter, HTTPException, Depends
-from models.user_model import TokenInput
-from fastapi.security import OAuth2PasswordBearer
 from auth.keycloak_auth import get_current_user
-from services.auth_service import validate_token_with_keycloak, get_access_token
-from config.settings import KEYCLOAK_URL, KEYCLOAK_REALM, KEYCLOAK_CLIENT_ID, KEYCLOAK_CLIENT_SECRET
-import httpx
+from services.auth_service import get_access_token
 
 router = APIRouter(tags=["Authentication"])
 

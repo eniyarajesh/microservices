@@ -1,19 +1,18 @@
-from fastapi import APIRouter, HTTPException, Depends, Request
+from fastapi import APIRouter, HTTPException, Depends
 from models.user_model import UserCreate
-from sqlalchemy.orm import Session
-from db.postgres import SessionLocal, get_db
-from services.user_service import get_user_by_username, register_user_service
-# from services.auth_service import store_user_in_postgres
-from utils.email_pswd_pattern import hash_password
+from services.user_service import get_user_by_username
+from services.postgres_service import store_user_in_postgres
 from auth.keycloak_auth import keycloak_user_exists
-from logs.logging_config import setup_logger
+from sqlalchemy.orm import Session
+from db.postgres import get_db
+from redis_cache.user_cache import redis_client  # Redis client instance
+import json
 import logging
 
 router = APIRouter()
 
-logger = setup_logger()
+logger = logging.getLogger(__name__)
 
- 
 
 @router.post("/register")
 async def register_user(user: UserCreate, db: Session = Depends(get_db)):
@@ -27,63 +26,17 @@ async def register_user(user: UserCreate, db: Session = Depends(get_db)):
     if keycloak_user:
         raise HTTPException(status_code=400, detail="User already exists in Keycloak")
 
-    # 3. Register user (store in DB + cache raw data)
-    response = await register_user_service(user)
-    logger.info(f"🗃️  User {user.username} registered in PostgreSQL. Awaiting Keycloak sync...")
+    try:
+        # Step 1: Cache raw user data (with password) in Redis
+        redis_client.set(user.username, json.dumps(user.dict()))
 
-    return response
+        # Step 2: Store user in PostgreSQL without password
+        user_data = user.dict()
+        await store_user_in_postgres(db, user_data)
+        logger.info(f"🗃️ User {user.username} stored in PostgreSQL (no password) and cached in Redis.")
 
-    # return {"message": f"User {user.username} registered in PostgreSQL. Awaiting Keycloak sync."}
+    except Exception as e:
+        logger.error(f"❌ Registration error: {str(e)}")
+        raise HTTPException(status_code=500, detail="Registration failed.")
 
-    # return await register_user_service(user)
-
-
-'''
-
-@router.post("/register")
-async def register_user(user: UserCreate, request: Request, db: Session = Depends(get_db)):
-    user = await request.json()
-    username = user["username"]
-
-    if get_user_by_username(db, username):
-        raise HTTPException(status_code=400, detail="User already exists in PostgreSQL")
-    
-    if await keycloak_user_exists(username):
-        raise HTTPException(status_code=400, detail="User already exists in Keycloak")
-
-    # user["password"] = hash_password(user["password"])
-
-    create_user_in_postgres(db, user)
-    # store_user_in_postgres(user)
-    logger.info(f"🗃️  User {username} registered in PostgreSQL. Awaiting Keycloak sync...")
-
-    return {"message": f"User {username} registered in PostgreSQL. Awaiting Keycloak sync."}
-
-'''
-
-
-
-
-
-
-
-
-
-
-
-# from fastapi import APIRouter, Depends, HTTPException
-# from models.user_model import UserCreate, UserOut
-# from services.user_service import create_user
-# from auth.keycloak_auth import get_current_user
-
-# router = APIRouter()
-
-# @router.post("/register", response_model=UserOut)
-# async def register_user(user: UserCreate):
-#     try:
-#         return await create_user(user)
-#     except ValueError as e:
-#         raise HTTPException(status_code=400, detail=str(e))
-
-
-
+    return {"message": f"User {user.username} successfully registered and queued for Keycloak sync."}

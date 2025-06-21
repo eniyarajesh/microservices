@@ -12,9 +12,8 @@ class User(Base):
     email = Column(String, nullable=False)
     firstname = Column(String, nullable=False)
     lastname = Column(String, nullable=False)
-    password = Column(String, nullable=False)
+    password = Column(String, nullable=True)
     synced = Column(String, default="no")
-
 
 
 # Pydantic Models
