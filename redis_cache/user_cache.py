@@ -1,10 +1,12 @@
+# Redis concept optional here
+
 from models.user_model import UserCreate
 from models.user_model import UserCreate
 from config.settings import REDIS_HOST, REDIS_PORT
+from pydantic import ValidationError
 import logging
 import redis
 import json
-import os
 
 
 logger = logging.getLogger(__name__)
@@ -29,6 +31,9 @@ def get_all_cached_users() -> dict:
     cached_users = {}
     for key in redis_client.keys("*"):
         raw = redis_client.get(key)
-        if raw:
+        try:
             cached_users[key.decode()] = UserCreate(**json.loads(raw))
+        except ValidationError as e:
+            logger.error(f"Invalid user data in Redis for key {key}: {e}")
+            continue  # Skip this invalid record
     return cached_users

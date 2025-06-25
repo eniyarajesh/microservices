@@ -7,4 +7,6 @@ apscheduler
 python-dotenv
 psycopg2-binary
 pydantic[email]
-redis
+aiosmtplib
+requests
+# redis

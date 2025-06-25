@@ -16,14 +16,27 @@ async def get_access_token(username: str,password: str):
         "password": password,
         "scope": "openid"
     }
-
     async with httpx.AsyncClient() as client:
         response = await client.post(token_url, data=data)
+
     if response.status_code != 200:
-        logger.error(f"Invalid user credentials")
-        raise HTTPException(status_code=401, detail=response.text)
+        try:
+            detail_json = response.json()
+            error_description = detail_json.get("error_description", "")
+        except Exception:
+            error_description = response.text
+
+        # Log based on Keycloak's specific error
+        if "account is not fully set up" in error_description.lower():
+            logger.warning(f"🔒 User {username} must reset password before login (temporary password in effect)")
+        else:
+            logger.error(f"🚫 Invalid login for user {username}: {error_description}")
+
+        raise HTTPException(status_code=401, detail=error_description)
+
     logger.info(f"Token is generated successfully for the user {username}")
     return response.json()
+
 
 
 
