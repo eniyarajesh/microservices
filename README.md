@@ -20,32 +20,40 @@ A backend microservice built using **FastAPI**, **PostgreSQL**, and **Keycloak**
 
 <pre><code>
 user_service/
-├── main.py
-├── models/
-│   └── user_model.py
-├── db/
-│   └── postgres.py
-├── services/
-│   ├── user_service.py   
-│   ├── auth_service.py
-│   └── postgres_service.py
 ├── auth/
 │   └── keycloak_auth.py
-├── tasks/
-│   └── sync_to_keycloak.py
-├── routers/
-│   ├── user_router.py
-│   └── auth_router.py
 ├── config/
 │   └── settings.py
+├── db/
+│   └── postgres.py
+├── logs/
+│   └── logging_config.py
+├── models/
+│   └── user_model.py
+├── redis_cache/
+│   └── user_cache.py
+├── routers/
+│   ├── auth_routes.py
+│   └── user_routes.py
+├── services/
+│   ├── auth_service.py
+│   ├── postgres_service.py
+│   ├── reset_email_service.py    
+│   └── user_service.py
+├── tasks/
+│   └── sync_to_keycloak.py
 ├── utils/
 │   ├── email_pattern.py          
 │   ├── email_trigger.py         
 │   ├── pswd_pattern.py           
 │   └── username_pattern.py      
 ├── .env
-├── requirements.txt   
+├── docker-compose.yaml
+├── Dockerfile
+├── main.py
+├── requirements.txt
 └── README.md
+
 </code></pre>
 
 
