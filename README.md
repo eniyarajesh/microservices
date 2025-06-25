@@ -1,16 +1,17 @@
 # 🧠 User Info Microservice
 
-A backend microservice built using **FastAPI**, **PostgreSQL**, and **Keycloak**, designed to securely register users, issue and validate tokens, and sync data between PostgreSQL and Keycloak using a background scheduler.
+A backend microservice built using **FastAPI**, **PostgreSQL**, and **Keycloak**, designed to securely register users, issue and validate tokens, and sync data between PostgreSQL and Keycloak using a background scheduler, and trigger password setup emails through Keycloak's built-in flow..
 
 ---
 
 ## 🚀 Features
 
-- 🔐 Register new users securely with UUID, email, password, and names
-- 🧾 Passwords stored only in Keycloak, never in plain form in PostgreSQL
+- 🔐 Register new users securely with names, email, password(password handled via email setup)
+- 🧾 Automated password reset email triggers for new users to set their own password via Keycloak
 - ⚙️ Background sync job to sync unsynced PostgreSQL users into Keycloak
 - ✅ Keycloak token validation for secured endpoints
-- 📁 Logging to both terminal and `logs/user_log.log`
+- 📜 Email, username, and password validation using modular pattern checks
+- 📁 Centralized Logging to both terminal and `logs/user_log.log`
 
 ---
 
@@ -59,6 +60,11 @@ user_service/
 
 Before running this project, make sure you have the following installed and configured:
 
+- Python 3.8+
+- PostgreSQL (Database created)
+- Keycloak (Running locally or via Docker)
+- SMTP Email Server (For sending password setup/reset emails)
+
 - **Python 3.8+**  
   Recommended to use a virtual environment
 
@@ -84,6 +90,7 @@ Before running this project, make sure you have the following installed and conf
 - **Environment Variables**
 
   Set in a .env file or environment:
+  <pre><code>
     DATABASE_URL
     KEYCLOAK_URL
     KEYCLOAK_ADMIN
@@ -93,6 +100,9 @@ Before running this project, make sure you have the following installed and conf
     KEYCLOAK_CLIENT_SECRET
     REDIS_HOST
     REDIS_PORT
+    EMAIL_USER
+    EMAIL_PASSWORD
+    </code></pre>
 
 ---
 
@@ -133,7 +143,11 @@ docker-compose up --build
 #### `POST /users/register`
 - Registers a new user
 - Stores user details (excluding password) in PostgreSQL
-- Password is temporarily cached and later synced to Keycloak
+- Triggers a password setup email through Keycloak to the user's email
+
+
+#### `POST /users/send-password-setup-email`
+- Manually triggers a reset password email for existing users via Keycloak
 
 ---
 
@@ -152,9 +166,26 @@ docker-compose up --build
 
 A background task runs every **15 seconds** to automatically:
 
-- 🔍 Fetch users from PostgreSQL whose `synced` status is `"no"`
-- 🧾 Create those users in **Keycloak** with their cached password
+- 🔍 Fetch users from PostgreSQL whose `synced` status is `"False"`
+- 🧾 Create those users in Keycloak
 - ✅ Mark the users as `synced` in the PostgreSQL database after successful Keycloak registration
+- ✅ Trigger email for users to set their own password (using Keycloak action link)
+
+--- 
+
+## ✉️ Email Integration
+
+- Users will receive an email with a password setup link
+- Clicking the link opens Keycloak's built-in password reset page
+- Users can set their own password securely (without your app handling raw passwords)
+---
+
+## Validation Utilities
+
+- Email Validation: **utils/email_pattern.py**
+- Username Validation: **utils/username_pattern.py**
+- Password Validation: **utils/pswd_pattern.py**
+- Modular and reusable **pattern checks**
 
 ---
 
@@ -183,7 +214,9 @@ A background task runs every **15 seconds** to automatically:
 - Keycloak – Identity & access management
 - Redis – (Optional) Caching passwords
 - APScheduler – Background jobs
+- SMTP (aiosmtplib) – Sending emails
 - httpx – Async HTTP client
+- Docker – Deployment
 
 ---
 
