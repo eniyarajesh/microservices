@@ -39,13 +39,10 @@ user_service/
 ├── config/
 │   └── settings.py
 ├── utils/
-│   └── email_pswd_pattern.py
-├── logs/
-│   └── logging_config.py   
-├── redis_cache/
-│   └── user_cache.py   
-├── docker-compose.yaml   
-├── Dockerfile    
+│   ├── email_pattern.py          
+│   ├── email_trigger.py         
+│   ├── pswd_pattern.py           
+│   └── username_pattern.py      
 ├── .env
 ├── requirements.txt   
 └── README.md
